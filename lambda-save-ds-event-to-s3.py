@@ -112,6 +112,7 @@ def lambda_handler(event, context):
                         else:
                             print("Could not write event to S3")
     else:
+        # in case of failure, simply output the log to CloudWatch Logs
         print("Received event: " + json.dumps(event, indent=2))
         
     return True
