@@ -67,3 +67,30 @@ bucket root
 ![Example listing of logs in S3 bucket](/docs/images/ds-events-logged-to-an-s3-bucket.png?raw=true "Deep Security events logged to an S3 bucket")
 
 **Warning:** This method can generate a *lot* of individual keys in the bucket. Querying via the S3 API or the AWS CLI isn't an issue but the browser-based Amazon S3 Management Console might have some performance issues when displaying the "folder" containing the *.txt files.
+
+## lambda-save-ds-event-to-s3-by-hostname.py
+
+The same script as ```lambda-save-ds-event-to-s3.py``` but saves log files in a structure that starts with the full hostname of the computer that generated the event. System events remain in the year-root structure.
+
+```
+bucket root
+  - 0000 # year < system events are stored here
+     - 00 # month
+       - 00 # day
+          - 00 # hour
+            - 0000-00-00-00-00-00-000000-AAAAAAAA.txt # YYYY-MM-DD-HH-MM-SS-FFFFFF-AAAAAAAA.txt
+            - 2016-08-04-01-07-17-080000-HRAWRUGD.txt
+            - 2016-08-04-01-07-17-080000-KE6K4KC9.txt
+            - 2016-08-04-01-07-17-080000-ZHBUWVG6.txt
+            - 2016-08-04-11-06-33-316000-SD9XNWTY.txt
+  - hostname
+    - 0000 # year
+     - 00 # month
+       - 00 # day
+          - 00 # hour
+            - 0000-00-00-00-00-00-000000-AAAAAAAA.txt # YYYY-MM-DD-HH-MM-SS-FFFFFF-AAAAAAAA.txt
+            - 2016-08-04-01-07-17-080000-HRAWRUGD.txt
+            - 2016-08-04-01-07-17-080000-KE6K4KC9.txt
+            - 2016-08-04-01-07-17-080000-ZHBUWVG6.txt
+            - 2016-08-04-11-06-33-316000-SD9XNWTY.txt
+```

@@ -4,6 +4,7 @@ from __future__ import print_function
 import datetime
 import json
 import random
+import re
 import string
 import tempfile
 
@@ -12,7 +13,7 @@ import boto3 # pre-installed in AWS Lambda environment
 
 S3_BUCKET_NAME = "deep-security-logs"
 
-def create_s3_key_name(timestamp):
+def create_s3_key_name(timestamp, event):
     """
     Create an S3 key name based on the specified timestamp
     """
@@ -25,6 +26,10 @@ def create_s3_key_name(timestamp):
     key_name = '{}-{}.txt'.format(str(timestamp), nonce)
     if type(timestamp) == type(datetime.datetime.now()):
         key_name = '{}-{}.txt'.format(timestamp.strftime("%Y/%m/%d/%H/%Y-%m-%d-%H-%M-%S-%f"), nonce)
+        if event.has_key('Hostname'):
+            hostname = re.sub(r"(\W)+", "-", event['Hostname']).strip('-')
+            if hostname and len(hostname) > 0:
+                key_name = '{}/{}-{}.txt'.format(hostname, timestamp.strftime("%Y/%m/%d/%H/%Y-%m-%d-%H-%M-%S-%f"), nonce)
 
     return key_name
 
@@ -35,7 +40,7 @@ def write_event_to_s3_bucket(event, timestamp, bucket_name):
     result = None
 
     # get a unique key name based on the event's timestamp
-    key_name = create_s3_key_name(timestamp)
+    key_name = create_s3_key_name(timestamp, event)
 
     # convert the event to a string for storage
     event_str = None
