@@ -47,7 +47,7 @@ To use;
 
 If you'd like to test the function, you can use the sample event above and run the test from the AWS Lambda Management Console. 
 
-### Results
+### Results from lambda-save-ds-event-to-s3.py
 
 The script will create a new key for each event received via the SNS topic. This results is a key naming structure similar to;
 
@@ -65,3 +65,5 @@ bucket root
 ```
 
 ![Example listing of logs in S3 bucket](/docs/images/ds-events-logged-to-an-s3-bucket.png?raw=true "Deep Security events logged to an S3 bucket")
+
+**Warning:** This method can generate a *lot* of individual keys in the bucket. Querying via the S3 API or the AWS CLI isn't an issue but the browser-based Amazon S3 Management Console might have some performance issues when displaying the "folder" containing the *.txt files.
