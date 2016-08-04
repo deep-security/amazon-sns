@@ -61,7 +61,7 @@ bucket root
             - 2016-08-04-01-07-17-080000-HRAWRUGD.txt
 						- 2016-08-04-01-07-17-080000-KE6K4KC9.txt
 						- 2016-08-04-01-07-17-080000-ZHBUWVG6.txt
-						-	2016-08-04-11-06-33-316000-SD9XNWTY.txt
+						- 2016-08-04-11-06-33-316000-SD9XNWTY.txt
 ```
 
 ![Example listing of logs in S3 bucket](/docs/images/ds-events-logged-to-an-s3-bucket.png?raw=true "Deep Security events logged to an S3 bucket")
