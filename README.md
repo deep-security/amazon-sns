@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Most versions of Deep Security 9.6+ have the ability to output events to an Amazon SNS topic. Events are sent as a JSON document to the specified SNS topic. The end result is a standard SNS notification wrapper with the Deep Security event stored in the ```Sns > Message``` key. 
+Most versions of Deep Security 9.6+ have the ability to output events to an Amazon SNS topic. Events are sent as a JSON document to the specified SNS topic. The end result is a standard SNS notification wrapper with the Deep Security event stored in the ```Sns > Message``` key of each Record in the notification. 
 
 The goal of the scripts in this repository is to help you manage and process these events.
 
@@ -46,3 +46,22 @@ To use;
 1. Add the code to the function and save.
 
 If you'd like to test the function, you can use the sample event above and run the test from the AWS Lambda Management Console. 
+
+### Results
+
+The script will create a new key for each event received via the SNS topic. This results is a key naming structure similar to;
+
+```
+bucket root
+  - 0000 # year
+     - 00 # month
+       - 00 # day
+          - 00 # hour
+            - 0000-00-00-00-00-00-000000-AAAAAAAA.txt # YYYY-MM-DD-HH-MM-SS-FFFFFF-AAAAAAAA.txt
+            - 2016-08-04-01-07-17-080000-HRAWRUGD.txt
+						- 2016-08-04-01-07-17-080000-KE6K4KC9.txt
+						- 2016-08-04-01-07-17-080000-ZHBUWVG6.txt
+						-	2016-08-04-11-06-33-316000-SD9XNWTY.txt
+```
+
+![Example listing of logs in S3 bucket](/docs/images/ds-events-logged-to-an-s3-bucket.png?raw=true "Deep Security events logged to an S3 bucket")
