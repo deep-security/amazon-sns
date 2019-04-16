@@ -1,21 +1,33 @@
 # Amazon SNS Utilities for Deep Security
 
-## Support
-
-This is a community project and while you will see contributions from the Deep Security team, there is no official Trend Micro support for this project. The official documentation for the Deep Security APIs is available from the [Trend Micro Online Help Centre](http://docs.trendmicro.com/en-us/enterprise/deep-security.aspx). 
-
-Tutorials, feature-specific help, and other information about Deep Security is available from the [Deep Security Help Center](https://help.deepsecurity.trendmicro.com/Welcome.html). 
-
-For Deep Security specific issues, please use the regular Trend Micro support channels. For issues with the code in this repository, please [open an issue here on GitHub](https://github.com/deep-security/amazon-sns/issues).
-
-## Purpose
-
-Most versions of Deep Security 9.6+ have the ability to output events to an Amazon SNS topic. Events are sent as a JSON document to the specified SNS topic. The end result is a standard SNS notification wrapper with the Deep Security event stored in the ```Sns > Message``` key of each Record in the notification. 
+Most versions of Deep Security Manager 9.6+ can output events to an Amazon SNS topic. Events are sent as a JSON document to the specified SNS topic. The end result is a standard SNS notification wrapper with the Deep Security event stored in the ```Sns > Message``` key of each Record in the notification. 
 
 The goal of the scripts in this repository is to help you manage and process these events.
 
-## Sample Event
 
+## Table of Contents
+
+* [Usage](#usage)
+* [Support](#support)
+* [Contribute](#contribute)
+
+
+##Usage
+### lambda-save-ds-event-to-s3.py
+
+This script is funs as an AWS Lambda function and processes each notification as it arrives. It extracts the Deep Security event from the notification and saves it in the specified S3 bucket.
+
+To use:
+
+1. Create a new S3 bucket
+1. Create a [new AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/get-started-create-function.html)
+1. Ensure the function executes in a role that has **write** permissions to the target S3 bucket (from step #1)
+1. Edit [line 13](https://github.com/deep-security/amazon-sns/blob/master/lambda-save-ds-event-to-s3.py#L13) by changing the value to your own S3 bucket name. The bucket should already exist
+1. Add the code to the function and save.
+
+If you'd like to test the function, you can use a sample event and run the test from the AWS Lambda Management Console. 
+
+#### Sample Event
 ```
 {
   "Records": [
@@ -41,23 +53,9 @@ The goal of the scripts in this repository is to help you manage and process the
 }
 ```
 
-## lambda-save-ds-event-to-s3.py
+#### Results from lambda-save-ds-event-to-s3.py
 
-This script is funs as an AWS Lambda function and processes each notification as it arrives. It extracts the Deep Security event from the notification and saves it in the specified S3 bucket.
-
-To use;
-
-1. Create a new S3 bucket
-1. Create a [new AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/get-started-create-function.html)
-1. Ensure the function executes in a role that has **write** permissions to the target S3 bucket (from step #1)
-1. Edit [line 13](https://github.com/deep-security/amazon-sns/blob/master/lambda-save-ds-event-to-s3.py#L13) by changing the value to your own S3 bucket name. The bucket should already exist
-1. Add the code to the function and save.
-
-If you'd like to test the function, you can use the sample event above and run the test from the AWS Lambda Management Console. 
-
-### Results from lambda-save-ds-event-to-s3.py
-
-The script will create a new key for each event received via the SNS topic. This results is a key naming structure similar to;
+The script will create a new key for each event received via the SNS topic. This results is a key naming structure like:
 
 ```
 bucket root
@@ -76,7 +74,7 @@ bucket root
 
 **Warning:** This method can generate a *lot* of individual keys in the bucket. Querying via the S3 API or the AWS CLI isn't an issue but the browser-based Amazon S3 Management Console might have some performance issues when displaying the "folder" containing the *.txt files.
 
-## lambda-save-ds-event-to-s3-by-hostname.py
+### lambda-save-ds-event-to-s3-by-hostname.py
 
 The same script as ```lambda-save-ds-event-to-s3.py``` but saves log files in a structure that starts with the full hostname of the computer that generated the event. System events remain in the year-root structure.
 
@@ -103,8 +101,32 @@ bucket root
             - 2016-08-04-11-06-33-316000-SD9XNWTY.txt
 ```
 
-## lambda-save-ds-events-to-s3.js
+### lambda-save-ds-events-to-s3.js
 
 Similar script as ```lambda-save-ds-events-to-s3.py``` but in Node.js.
 Edit [line 7](https://github.com/deep-security/amazon-sns/blob/master/lambda-save-ds-event-to-s3.js#L7) by changing the value to your own S3 bucket name.
 If desired, the s3 folder name and file extension can also be modified on lines 9 and 10.
+
+## Support
+
+This is an Open Source community project. Project contributors may be able to help, 
+depending on their time and availability. Please be specific about what you're 
+trying to do, your system, and steps to reproduce the problem.
+
+For bug reports or feature requests, please 
+[open an issue](../issues). 
+You are welcome to [contribute](#contribute).
+
+Official support from Trend Micro is not available. Individual contributors may be 
+Trend Micro employees, but are not official support.
+
+## Contribute
+
+We accept contributions from the community. To submit changes:
+
+1. Fork this repository.
+1. Create a new feature branch.
+1. Make your changes.
+1. Submit a pull request with an explanation of your changes or additions.
+
+We will review and work with you to release the code.
