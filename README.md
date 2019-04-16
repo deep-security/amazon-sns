@@ -12,7 +12,7 @@ The goal of the scripts in this repository is to help you manage and process the
 * [Contribute](#contribute)
 
 
-##Usage
+## Usage
 ### lambda-save-ds-event-to-s3.py
 
 This script is funs as an AWS Lambda function and processes each notification as it arrives. It extracts the Deep Security event from the notification and saves it in the specified S3 bucket.
